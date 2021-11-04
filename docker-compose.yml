@@ -1,15 +1,27 @@
-version: "2.2"
+version: "3.3"
 services:
   asir_bind9:
+    container_name: asir_bind9
     image: internetsystemsconsortium/bind9:9.16
+    networks:
+      br02:
+        ipv4_address: 10.1.0.254
     ports:
       - 53:53
     volumes:
       - conf:/etc/bind
   asir_cliente:
+    container_name: asir_cliente
     image: ubuntu
+    networks:
+      - br02
     stdin_open: true  # docker run -i
     tty: true         # docker run -t
+    dns:
+      - 10.1.0.254  # el contenedor dns server
 volumes:
   conf:
-    external: true # tenemos que tenerlo previamente o crearlo
+    external: true # tenemos que tenerlo creado previamente
+networks:
+  br02: 
+    external: true
